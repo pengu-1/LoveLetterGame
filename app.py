@@ -23,16 +23,16 @@ import os
 
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/queries/#deleting-records
 
-APP = Flask(__name__, static_folder='./build', static_url_path='/')
-socketio = SocketIO(APP, cors_allowed_origins="*")
+app = Flask(__name__, static_folder='./build', static_url_path='/')
+socketio = SocketIO(app, cors_allowed_origins="*")
 ENV='prod'
 if ENV == 'dev':
-    APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
 else:
-    APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://tbvmgabjhlvcau:3520a9fe1c3ccdf5fc9dfc8ad1cb3dd25f2cbf3a20dcc3276aefbfe2b06836e5@ec2-54-86-170-8.compute-1.amazonaws.com:5432/d716jnbocptfmd'
-#APP.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Dixonmaiateapie1@127.0.0.1/gamestate'
-APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(APP)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://tbvmgabjhlvcau:3520a9fe1c3ccdf5fc9dfc8ad1cb3dd25f2cbf3a20dcc3276aefbfe2b06836e5@ec2-54-86-170-8.compute-1.amazonaws.com:5432/d716jnbocptfmd'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Dixonmaiateapie1@127.0.0.1/gamestate'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 class Gameid(db.Model):
     __tablename__ = 'gameid'
@@ -72,9 +72,9 @@ class Players(db.Model):
     # def __repr__(self):
     #     return '<Players %r>' self.code
 
-@APP.route('/')
+@app.route('/')
 def index():
-    return APP.send_static_file('index.html')
+    return app.send_static_file('index.html')
 
 def cleanDatabase():
     db.session.query(Gameid).delete()
@@ -276,7 +276,7 @@ def playCard(room, card, targ, targCard, user):
     else:
         return {'state': state, 'turn': curTurn, 'end': False, 'deckSize': deckSize}
 
-@APP.route('/api/create', methods=['POST'])
+@app.route('/api/create', methods=['POST'])
 def Create():
     # cur = con.cursor()
     # room = roomGen(4)
@@ -454,4 +454,4 @@ if __name__ == '__main__':
     # x.start()
     port=int(os.environ.get('PORT', '5000'))
     print(port)
-    socketio.run(APP, host='0.0.0.0', port=port)
+    socketio.run(app, host='0.0.0.0', port=port)
