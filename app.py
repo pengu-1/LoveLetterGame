@@ -72,7 +72,7 @@ class Players(db.Model):
     # def __repr__(self):
     #     return '<Players %r>' self.code
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return app.send_static_file('index.html')
 
