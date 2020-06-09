@@ -25,7 +25,7 @@ import os
 
 app = Flask(__name__, static_folder='./build', static_url_path='/')
 socketio = SocketIO(app, cors_allowed_origins="*")
-ENV='prod'
+ENV='dev'
 if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
 else:
@@ -72,9 +72,10 @@ class Players(db.Model):
     # def __repr__(self):
     #     return '<Players %r>' self.code
 
-@app.route('/', methods=['GET'])
+@app.route("/")
 def index():
-    return app.send_static_file('index.html')
+    return 'NOT WORKING'
+    #return app.send_static_file('index.html')
 
 def cleanDatabase():
     db.session.query(Gameid).delete()
