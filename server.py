@@ -22,13 +22,13 @@ import threading
 
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/queries/#deleting-records
 
-APP = Flask(__name__)
-socketio = SocketIO(APP, cors_allowed_origins="http://localhost:3000")
-ENV='dev'
+APP = Flask(__name__, static_folder='./build', static_url_path='/')
+socketio = SocketIO(APP, cors_allowed_origins="http://localhost:5000")
+ENV='prod'
 if ENV == 'dev':
     APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
 else:
-    APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://hxaztioevjidzt:1aab2530d36691775d89ea3441a3d7e5f73f4d10d93abcef09b45fbaaaa45dd4@ec2-3-222-150-253.compute-1.amazonaws.com:5432/d11n1ogb9qk0oh'
+    APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://tbvmgabjhlvcau:3520a9fe1c3ccdf5fc9dfc8ad1cb3dd25f2cbf3a20dcc3276aefbfe2b06836e5@ec2-54-86-170-8.compute-1.amazonaws.com:5432/d716jnbocptfmd'
 #APP.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Dixonmaiateapie1@127.0.0.1/gamestate'
 APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(APP)
@@ -70,6 +70,10 @@ class Players(db.Model):
     lplayed = db.Column('lplayed', db.Integer)
     # def __repr__(self):
     #     return '<Players %r>' self.code
+
+@APP.route('/')
+def index():
+    return APP.send_static_file('index.html')
 
 def cleanDatabase():
     db.session.query(Gameid).delete()
@@ -447,4 +451,4 @@ def ReqCard(data):
 if __name__ == '__main__':
     # x = threading.Thread(target=cleanDatabase)
     # x.start()
-    socketio.run(APP)
+    socketio.run(APP, debug=True)
