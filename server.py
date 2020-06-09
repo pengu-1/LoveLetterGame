@@ -9,6 +9,7 @@ import random
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import threading
+import os
 # import functions.playCard as play
 
 
@@ -81,7 +82,7 @@ def cleanDatabase():
         lastHour = dt.now() - timedelta(hours=1)
         db.session.query(Gameid).filter(Gameid.createtime < lastHour).delete()
         db.session.commit()
-        sleep(3600)
+        sleep(10)
 
 
 def roomGen(stringLength):
@@ -449,6 +450,7 @@ def ReqCard(data):
 
 
 if __name__ == '__main__':
-    # x = threading.Thread(target=cleanDatabase)
-    # x.start()
-    socketio.run(APP, debug=True)
+    x = threading.Thread(target=cleanDatabase)
+    x.start()
+    port=int(os.environ.get('PORT', '5000'))
+    socketio.run(APP, port=port)
