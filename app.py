@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from json import dumps
 from time import sleep
@@ -74,8 +74,7 @@ class Players(db.Model):
 
 @app.route("/")
 def index():
-    return 'NOT WORKING'
-    #return app.send_static_file('index.html')
+    return render_template('index.html')
 
 def cleanDatabase():
     db.session.query(Gameid).delete()
