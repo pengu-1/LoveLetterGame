@@ -24,7 +24,7 @@ import os
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/queries/#deleting-records
 
 APP = Flask(__name__, static_folder='./build', static_url_path='/')
-socketio = SocketIO(APP, cors_allowed_origins="http://localhost:5000")
+socketio = SocketIO(APP, cors_allowed_origins="*")
 ENV='prod'
 if ENV == 'dev':
     APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
@@ -82,7 +82,7 @@ def cleanDatabase():
         lastHour = dt.now() - timedelta(hours=1)
         db.session.query(Gameid).filter(Gameid.createtime < lastHour).delete()
         db.session.commit()
-        sleep(10)
+        sleep(3600)
 
 
 def roomGen(stringLength):
@@ -450,8 +450,8 @@ def ReqCard(data):
 
 
 if __name__ == '__main__':
-    x = threading.Thread(target=cleanDatabase)
-    x.start()
+    # x = threading.Thread(target=cleanDatabase)
+    # x.start()
     port=int(os.environ.get('PORT', '5000'))
     print(port)
     socketio.run(APP, host='0.0.0.0', port=port)
