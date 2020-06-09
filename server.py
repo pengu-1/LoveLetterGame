@@ -453,4 +453,5 @@ if __name__ == '__main__':
     x = threading.Thread(target=cleanDatabase)
     x.start()
     port=int(os.environ.get('PORT', '5000'))
-    socketio.run(APP, port=port)
+    print(port)
+    socketio.run(APP, host='0.0.0.0', port=port)
