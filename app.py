@@ -23,7 +23,7 @@ import os
 
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/queries/#deleting-records
 
-app = Flask(__name__, static_folder='./build', static_url_path='/', template_folder='build')
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 socketio = SocketIO(app, cors_allowed_origins="*")
 ENV='dev'
 if ENV == 'dev':
@@ -74,7 +74,7 @@ class Players(db.Model):
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 def cleanDatabase():
     db.session.query(Gameid).delete()
