@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, send_from_directory
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from json import dumps
 from time import sleep
@@ -25,7 +25,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__, static_folder=os.path.join(basedir, 'build'), static_url_path='/')
 socketio = SocketIO(app, cors_allowed_origins="*")
-ENV='prod'
+ENV='dev'
 if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
 else:
@@ -74,10 +74,10 @@ class Players(db.Model):
 
 @app.route("/")
 def index():
+    print("HELLO")
     root_dir = os.path.dirname(os.getcwd())
     print(root_dir)
-    return send_from_directory(os,path.join(root_dir, 'build'), 'index.html')
-
+    return send_from_directory(os.path.join('.', 'build'),'index.html')
 def cleanDatabase():
     db.session.query(Gameid).delete()
     while True:
