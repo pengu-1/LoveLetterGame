@@ -19,27 +19,24 @@ function App() {
     }
 
     return (
-        <div>
-            hi
-        </div>
-        // <AuthContext.Provider value={authDetails}>
-        //     <Router>
-        //         <Switch>
-        //             <Route exact path="/createuser" render={(props) => {
-        //                 return <CreateUser {...props} setAuth={setAuth} />
-        //             }}
-        //             />
-        //             <ProtectedRoute exact path="/" render={(props) => {
-        //                 return <Lobby {...props} />
-        //             }}
-        //             />
-        //             <ProtectedRoute path="/:id" render={(props) => {
-        //                 return <Room {...props} />
-        //             }}
-        //             />
-        //         </Switch>
-        //     </Router>
-        // </AuthContext.Provider>
+        <AuthContext.Provider value={authDetails}>
+            <Router>
+                <Switch>
+                    <Route exact path="/createuser" render={(props) => {
+                        return <CreateUser {...props} setAuth={setAuth} />
+                    }}
+                    />
+                    <ProtectedRoute exact path="/" render={(props) => {
+                        return <Lobby {...props} />
+                    }}
+                    />
+                    <ProtectedRoute path="/:id" render={(props) => {
+                        return <Room {...props} />
+                    }}
+                    />
+                </Switch>
+            </Router>
+        </AuthContext.Provider>
     )
 }
 

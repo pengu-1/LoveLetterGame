@@ -22,10 +22,10 @@ import os
 # cur = conn.cursor()
 
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/queries/#deleting-records
-
-app = Flask(__name__, static_folder='./build', static_url_path='/')
+basedir = os.path.abspath(os.path.dirname(__file__))
+app = Flask(__name__, static_folder=os.path.join(basedir, 'build'), static_url_path='/')
 socketio = SocketIO(app, cors_allowed_origins="*")
-ENV='dev'
+ENV='prod'
 if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
 else:
@@ -74,6 +74,7 @@ class Players(db.Model):
 
 @app.route("/")
 def index():
+    print("HELLO")
     return app.send_static_file('index.html')
 
 def cleanDatabase():
