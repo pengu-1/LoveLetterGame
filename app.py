@@ -74,8 +74,9 @@ class Players(db.Model):
 
 @app.route("/")
 def index():
-    print("HELLO")
-    return app.send_static_file('index.html')
+    root_dir = os.path.dirname(os.getcwd())
+    print(root_dir)
+    return send_from_directory(os,path.join(root_dir, 'build'), 'index.html')
 
 def cleanDatabase():
     db.session.query(Gameid).delete()
