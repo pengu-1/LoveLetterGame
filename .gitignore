@@ -10,7 +10,6 @@ __pycache__
 /coverage
 
 # production
-/build
 
 # misc
 .DS_Store

@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/static/css/main.dc0a14bb.chunk.css",
+    "main.js": "/static/js/main.b0fa715b.chunk.js",
+    "main.js.map": "/static/js/main.b0fa715b.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.23d2e6ad.js",
+    "runtime-main.js.map": "/static/js/runtime-main.23d2e6ad.js.map",
+    "static/js/2.5c31254c.chunk.js": "/static/js/2.5c31254c.chunk.js",
+    "static/js/2.5c31254c.chunk.js.map": "/static/js/2.5c31254c.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.9228f527d191ea084db1c9fb638cd899.js": "/precache-manifest.9228f527d191ea084db1c9fb638cd899.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.dc0a14bb.chunk.css.map": "/static/css/main.dc0a14bb.chunk.css.map",
+    "static/js/2.5c31254c.chunk.js.LICENSE.txt": "/static/js/2.5c31254c.chunk.js.LICENSE.txt",
+    "static/media/baron.jpg": "/static/media/baron.04c2e596.jpg",
+    "static/media/cardBack.jpg": "/static/media/cardBack.d84bd95b.jpg",
+    "static/media/countess.jpg": "/static/media/countess.0e99bec1.jpg",
+    "static/media/guard.jpg": "/static/media/guard.a642f0ab.jpg",
+    "static/media/handmaid.jpg": "/static/media/handmaid.16687114.jpg",
+    "static/media/king.jpg": "/static/media/king.ac6073aa.jpg",
+    "static/media/priest.jpg": "/static/media/priest.9f21512b.jpg",
+    "static/media/prince.jpg": "/static/media/prince.c5170c5b.jpg",
+    "static/media/princess.jpg": "/static/media/princess.4a97edff.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.23d2e6ad.js",
+    "static/js/2.5c31254c.chunk.js",
+    "static/css/main.dc0a14bb.chunk.css",
+    "static/js/main.b0fa715b.chunk.js"
+  ]
+}
