@@ -3,8 +3,8 @@ import {Typography, makeStyles} from '@material-ui/core'
 import io from 'socket.io-client'
 import NotStarted from './RoomComponents/NotStarted'
 import Started from './RoomComponents/Started'
-let endPoint = "http://localhost:5000"
-//let endPoint = "http://penguu.herokuapp.com"
+//let endPoint = "http://localhost:5000"
+let endPoint = "http://penguu.herokuapp.com"
 let socket
 const useStyles = makeStyles((theme) => ({
     '@global': {
