@@ -146,14 +146,8 @@ def playCard(room, card, targ, targCard, user):
                 db.session.query(Players).filter_by(code=room).filter_by(player=targ).update({Players.dead: True})
     #Priest
     elif(card >= 6 and card <= 7):
-        if (targ != ""):
-            for i in hands:
-                if (i.player == targ):
-                    theirCard = i.card
-            for i in players:
-                if (i.player == targ):
-                    theirPos = i.turn
-            
+        pass
+                    
     # Baron
     elif(card >= 8 and card <= 9):
         if (targ != ""):
@@ -237,6 +231,11 @@ def playCard(room, card, targ, targCard, user):
             allTurns[i.turn] = i.player
     if (len(allTurns) == 1 or deck is None):
         if (deck is None):
+            for turn, player in allTurns.items():
+                for i in hands:
+                    if (i.player == player):
+                        socketio.emit("showCard", {'play': False, 'card': i.card, 'pos': turn, 'discard': False}, room=room)
+            socketio.sleep(3)
             maxCard = 0
             for i in hands:
                 if (cardTranslate(i.card) > maxCard):
@@ -273,8 +272,17 @@ def playCard(room, card, targ, targCard, user):
     state = []
     for i in players: 
         state.append({"name": i.player, "turn": i.turn, "lplayed": i.lplayed, "dead": i.dead})
-    if (cardTranslate(card) == 2):
-        return {'state': state, 'turn': curTurn, 'end': False, 'priest': [theirCard, theirPos], 'deckSize': deckSize}
+    if (cardTranslate(card) == 2 ):
+        if (targ != ""):
+            for i in hands:
+                if (i.player == targ):
+                    theirCard = i.card
+            for i in players:
+                if (i.player == targ):
+                    theirPos = i.turn
+            return {'state': state, 'turn': curTurn, 'end': False, 'priest': [theirCard, theirPos], 'deckSize': deckSize}
+        else:
+            return {'state': state, 'turn': curTurn, 'end': False, 'deckSize': deckSize}
     else:
         return {'state': state, 'turn': curTurn, 'end': False, 'deckSize': deckSize}
 
@@ -436,7 +444,7 @@ def PlayCard(data):
     if (gameState['end']):
         emit('endGame', {'state': gameState['state'], 'winner': ', '.join(gameState['winner'])}, room=room)
         return
-    if (card == 6 or card == 7):
+    if ((card == 6 or card == 7) and targ != ""):
         emit('showCard', {'play': False, 'card': gameState['priest'][0], 'pos': gameState['priest'][1], 'discard': False})
         socketio.sleep(3)
     emit('updating', {'updating': False})
