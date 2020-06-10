@@ -50,7 +50,7 @@ function NotStarted(props) {
                     with no intention of monetary gain. 
                     <br/><br/>
                     The game has 16 cards.
-                    The number on the top left indicates its value. 
+                    The number on the top left indicates its value. At the start of the game, the top card of the deck is discarded. 
                     <br/><br/>
                     On each turn, the player draws a card and discards one, applying the effect. The effects of any cards 
                     discarded due to card effects are not applied.

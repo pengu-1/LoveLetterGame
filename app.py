@@ -25,7 +25,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__, static_folder=os.path.join(basedir, 'build'), static_url_path='/')
 socketio = SocketIO(app, cors_allowed_origins="*")
-ENV='prod'
+ENV='dev'
 if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
 else:
@@ -74,8 +74,6 @@ class Players(db.Model):
 
 @app.route("/")
 def index():
-    print("HELLO")
-    print(basedir)
     return send_from_directory(os.path.join(basedir, 'build'),'index.html')
 
 def cleanDatabase():
@@ -141,9 +139,14 @@ def playCard(room, card, targ, targCard, user):
             for i in hands:
                 if (i.player == targ):
                     theirCard = i.card
+            for i in players:
+                if (i.player == targ):
+                    theirPos = i.turn
             if (theirCard == targCard or (theirCard < 14 and theirCard - targCard == 1)):
                 db.session.query(Hands).filter_by(code=room).filter_by(player=targ).delete()
                 db.session.query(Players).filter_by(code=room).filter_by(player=targ).update({Players.dead: True})
+                socketio.emit("showCard", {'play': False, 'card': theirCard, 'pos': theirPos, 'discard': True}, room=room)
+                socketio.sleep(3)
     #Priest
     elif(card >= 6 and card <= 7):
         pass
@@ -229,6 +232,7 @@ def playCard(room, card, targ, targCard, user):
     for i in players:
         if ( not i.dead):
             allTurns[i.turn] = i.player
+
     if (len(allTurns) == 1 or deck is None):
         if (deck is None):
             for turn, player in allTurns.items():
@@ -240,10 +244,11 @@ def playCard(room, card, targ, targCard, user):
             for i in hands:
                 if (cardTranslate(i.card) > maxCard):
                     winner = [i.player]
+                    maxCard = cardTranslate(i.card)
                 elif (cardTranslate(i.card) == maxCard):
                     winner.append(i.player)
         else: 
-            winner = list(allTurns.values())[0]
+            winner = [list(allTurns.values())[0]]
         db.session.query(Gameid).filter_by(code=room).update({Gameid.started: False, Gameid.turn: 0})
         db.session.query(Hands).filter_by(code=room).delete()
         db.session.query(Decks).filter_by(code=room).delete()
@@ -253,7 +258,13 @@ def playCard(room, card, targ, targCard, user):
         players = db.session.query(Players).filter_by(code=room).order_by(Players.turn).all()
         for i in players: 
             state.append({"name": i.player, "turn": i.turn, "lplayed": i.lplayed, "dead": i.dead})
-        return {'state': state, 'end': True, 'winner': winner}
+            if (i.player == winner[0]):
+                startingTurn = i.turn
+        db.session.query(Gameid).filter_by(code=room).update({Gameid.turn: startingTurn})
+        db.session.commit()
+        print("playCard end")
+        print(startingTurn)
+        return {'state': state, 'end': True, 'winner': winner, 'startTurn': startingTurn}
 
     while True:
         curTurn = (curTurn + 1) % nPlayers
@@ -406,10 +417,13 @@ def Start(data):
     random.shuffle(deck)
     draw = deck.pop(0)
     db.session.query(Gameid).filter_by(code=room).update({Gameid.createtime: db.func.now(), Gameid.dcard: draw}, synchronize_session='fetch')
+    startTurn = db.session.query(Gameid).filter_by(code=room).first()
+    print("STARTGAME")
+    print(startTurn.turn)
     gamePlayers = db.session.query(Players).filter_by(code=room).order_by(Players.turn).all()
     # mySql = "SELECT * FROM players WHERE code=%s order by turn ASC"
     for i in gamePlayers:
-        if (i.turn == 0):
+        if (i.turn == startTurn.turn):
             draw = deck.pop(0)
             newHand = Hands(code=room, player=i.player, card=draw)
             db.session.add(newHand)
@@ -420,7 +434,7 @@ def Start(data):
         newDeckCard = Decks(code=room, card=i) 
         db.session.add(newDeckCard)   
     db.session.commit()
-    emit('start', {"isStarted": True, 'deckSize': len(deck)}, room=room)
+    emit('start', {"isStarted": True, 'deckSize': len(deck), 'turn': startTurn.turn}, room=room)
 
 @socketio.on('getHand')
 def GetHand(data):
@@ -442,7 +456,7 @@ def PlayCard(data):
     targCard = data['targCard']
     gameState = playCard(room, card, targ, targCard, user)
     if (gameState['end']):
-        emit('endGame', {'state': gameState['state'], 'winner': ', '.join(gameState['winner'])}, room=room)
+        emit('endGame', {'state': gameState['state'], 'winner': ', '.join(gameState['winner']), 'turn': gameState['startTurn']}, room=room)
         return
     if ((card == 6 or card == 7) and targ != ""):
         emit('showCard', {'play': False, 'card': gameState['priest'][0], 'pos': gameState['priest'][1], 'discard': False})

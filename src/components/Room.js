@@ -3,8 +3,8 @@ import {Typography, makeStyles} from '@material-ui/core'
 import io from 'socket.io-client'
 import NotStarted from './RoomComponents/NotStarted'
 import Started from './RoomComponents/Started'
-
-let endPoint = "http://penguu.herokuapp.com"
+let endPoint = "http://localhost:5000"
+//let endPoint = "http://penguu.herokuapp.com"
 let socket
 const useStyles = makeStyles((theme) => ({
     '@global': {
@@ -28,7 +28,7 @@ function Room(props) {
     const [joined, setJoined] = useState(false)
     const [started, setStarted] = useState(false)
     const [gameState, setGameState] = useState([]) //[{name: u1, turn: 0, lplayed: -1, dead: False}, {name:u1, turn: 1, lplayed:-1, dead: False}]
-    const [turn, setTurn] = useState(0)
+    const [turn, setTurn] = useState()
     const [myTurn, setMyTurn] = useState()
     const [myHand, setMyHand] = useState([])
     const [deckSize, setDeckSize] = useState(0)
@@ -39,9 +39,10 @@ function Room(props) {
         socket.emit('join', {roomCode: room, username: user})
         socket.on('start', payload => {
             setDeckSize(payload.deckSize)
-            console.log(payload.deckSize)
             setStarted(payload.isStarted)
-            setTurn(0)
+            console.log("start")
+            console.log(payload.turn)
+            setTurn(payload.turn)
             socket.emit("getHand", {roomCode: room, username: user})
         })
         socket.on('setUser', payload => {
@@ -59,6 +60,7 @@ function Room(props) {
             setGameState(payload.state)
             setTurn(payload.turn)
             setDeckSize(payload.deckSize)
+            console.log("UPDATE")
             console.log(payload.state)
             console.log(payload.turn)
             socket.emit("getHand", {roomCode: room, username: user})
@@ -71,6 +73,7 @@ function Room(props) {
             setStarted(false)
             setGameState(payload.state)
             setWinner(payload.winner)
+            setTurn(payload.turn)
         })
                 
         return () => {
