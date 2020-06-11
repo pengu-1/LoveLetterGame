@@ -7,7 +7,7 @@ import PlayTable from './PlayTable'
 import Players from './Players'
 import {socket} from '../Room'
 import ShowCard from './ShowCard'
-
+import Chat from './Chat'
 makeStyles((theme) => ({
 '@global': {
     body: {
@@ -26,7 +26,6 @@ function Started(props) {
     const [updating, setUpdating] = useState(false)
     const [showCardList, setShowCardList] = useState()
     const [topCard, setTopCard] = useState(0)
-
     const previousTurn = usePrevious(props.turn)
 
     useEffect(() => {
@@ -147,6 +146,7 @@ function Started(props) {
                 </Button> 
             </div>
             {openDeckList && <DeckList/>}
+                <Chat openDeckList={openDeckList} room={props.room} user={props.user}/>
             <div style={openDeckList ? {width: '79%', float: 'left'} : {width: '100%', float: 'left'}}>
                 {(typeof showCardList != "undefined") && showCardList}
                 <Grid container  justify="center" direction="row" style={{height: '28vh'}}>

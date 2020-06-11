@@ -25,7 +25,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__, static_folder=os.path.join(basedir, 'build'), static_url_path='/')
 socketio = SocketIO(app, cors_allowed_origins="*")
-ENV='prod'
+ENV='dev'
 if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
 else:
@@ -472,6 +472,13 @@ def ReqCard(data):
     getCard = db.session.query(Hands).filter_by(code=room).filter_by(player=player).first()
     emit('showCard', {'play': False, 'card': getCard.card, 'pos': getTurn.turn, 'discard': False})
 
+@socketio.on('sendMsg')
+def SendMsg(data):
+    room = data['room']
+    player = data['user']
+    msg = data['msg']
+    newMsg = player + ': ' + msg
+    emit('getMsg', {'msg': newMsg}, room=room)
 
 if __name__ == '__main__':
     # x = threading.Thread(target=cleanDatabase)
