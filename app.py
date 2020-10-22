@@ -27,7 +27,7 @@ app = Flask(__name__, static_folder=os.path.join(basedir, 'build'), static_url_p
 socketio = SocketIO(app, cors_allowed_origins="*")
 ENV='dev'
 if ENV == 'dev':
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:Dixonmaiateapie1@localhost/gamestate'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pengu1:xxxx@localhost/gamestate'
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://tbvmgabjhlvcau:3520a9fe1c3ccdf5fc9dfc8ad1cb3dd25f2cbf3a20dcc3276aefbfe2b06836e5@ec2-54-86-170-8.compute-1.amazonaws.com:5432/d716jnbocptfmd'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Dixonmaiateapie1@127.0.0.1/gamestate'
